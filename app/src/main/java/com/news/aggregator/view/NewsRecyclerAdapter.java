@@ -12,9 +12,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.news.aggregator.AppComponent;
 import com.news.aggregator.R;
-import com.news.aggregator.model.NewsItem;
+import com.news.aggregator.model.NewsArticle;
 import com.squareup.picasso.Picasso;
 
 import java.text.SimpleDateFormat;
@@ -27,7 +26,7 @@ import butterknife.ButterKnife;
 class NewsRecyclerAdapter extends RecyclerView.Adapter<NewsRecyclerAdapter.PostViewHolder> implements View.OnClickListener {
 
     private SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd MMM yyyy HH:mm");
-    private List<NewsItem> newsItems = new ArrayList<>();
+    private List<NewsArticle> newsArticles = new ArrayList<>();
     private Context context;
     private int imageHeight;
     private int imageWidth;
@@ -38,8 +37,8 @@ class NewsRecyclerAdapter extends RecyclerView.Adapter<NewsRecyclerAdapter.PostV
         this.imageWidth = context.getResources().getDimensionPixelSize(R.dimen.image_width);
     }
 
-    void setNewsItems(@NonNull List<NewsItem> newsItems) {
-        this.newsItems = newsItems;
+    void setNewsArticles(@NonNull List<NewsArticle> newsArticles) {
+        this.newsArticles = newsArticles;
         notifyDataSetChanged();
     }
 
@@ -51,30 +50,30 @@ class NewsRecyclerAdapter extends RecyclerView.Adapter<NewsRecyclerAdapter.PostV
 
     @Override
     public void onBindViewHolder(PostViewHolder holder, int position) {
-        NewsItem newsItem = newsItems.get(position);
-        holder.itemView.setTag(newsItem);
+        NewsArticle newsArticle = newsArticles.get(position);
+        holder.itemView.setTag(newsArticle);
         holder.itemView.setOnClickListener(this);
 
-        if (TextUtils.isEmpty(newsItem.getAuthor())) {
+        if (TextUtils.isEmpty(newsArticle.getAuthor())) {
             holder.author.setVisibility(View.GONE);
         } else {
-            holder.author.setText( String.format(context.getString(R.string.author), newsItem.getAuthor()));
+            holder.author.setText( String.format(context.getString(R.string.author), newsArticle.getAuthor()));
             holder.author.setVisibility(View.VISIBLE);
         }
 
-        if (newsItem.getPublishedAt() == null) {
+        if (newsArticle.getPublishedAt() == null) {
             holder.date.setVisibility(View.GONE);
         } else {
-            holder.date.setText(simpleDateFormat.format(newsItem.getPublishedAt()));
+            holder.date.setText(simpleDateFormat.format(newsArticle.getPublishedAt()));
             holder.date.setVisibility(View.VISIBLE);
         }
-        holder.text.setText(newsItem.getTitle());
+        holder.text.setText(newsArticle.getTitle());
 
-        if (TextUtils.isEmpty(newsItem.getUrlToImage())) {
+        if (TextUtils.isEmpty(newsArticle.getUrlToImage())) {
             holder.image.setImageResource(R.drawable.placeholder);
         } else {
             Picasso.with(context)
-                    .load(Uri.parse(newsItem.getUrlToImage()))
+                    .load(Uri.parse(newsArticle.getUrlToImage()))
                     .resize(imageWidth, imageHeight)
                     .error(R.drawable.placeholder)
                     .into(holder.image);
@@ -83,13 +82,13 @@ class NewsRecyclerAdapter extends RecyclerView.Adapter<NewsRecyclerAdapter.PostV
 
     @Override
     public int getItemCount() {
-        return newsItems.size();
+        return newsArticles.size();
     }
 
     @Override
     public void onClick(View view) {
-        if (view.getTag() instanceof NewsItem) {
-            String url = ((NewsItem) view.getTag()).getUrl();
+        if (view.getTag() instanceof NewsArticle) {
+            String url = ((NewsArticle) view.getTag()).getUrl();
             Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
             context.startActivity(browserIntent);
         }

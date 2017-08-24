@@ -3,6 +3,7 @@ package com.news.aggregator.view;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
+import android.support.v4.BuildConfig;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -11,7 +12,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -22,9 +22,9 @@ import android.widget.Toast;
 
 import com.news.aggregator.NewsApp;
 import com.news.aggregator.R;
-import com.news.aggregator.model.NewsItem;
+import com.news.aggregator.model.NewsArticle;
 import com.news.aggregator.model.NewsSource;
-import com.news.aggregator.usecase.GetNewsItems;
+import com.news.aggregator.usecase.GetNewsArticles;
 import com.news.aggregator.usecase.GetNewsSources;
 import com.news.aggregator.util.Consts;
 
@@ -56,7 +56,7 @@ public class MainActivity extends AppCompatActivity
     RecyclerView newsView;
 
     @Inject
-    GetNewsItems getNewsItems;
+    GetNewsArticles getNewsArticles;
     @Inject
     GetNewsSources getNewsSources;
 
@@ -182,30 +182,32 @@ public class MainActivity extends AppCompatActivity
                     } else {
                         spinner.setSelection(0);
                     }
-                }, throwable -> clearSpinnerAndShowErrorToast());
+                }, this::clearSpinnerAndShowErrorToast);
     }
 
     private void loadNews(@NonNull  NewsSource newsSource) {
-        getNewsItems.call(newsSource.getId())
+        getNewsArticles.call(newsSource)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(newsItems -> {
                     swipeRefreshLayout.setRefreshing(false);
-                    newsAdapter.setNewsItems(newsItems);
+                    newsAdapter.setNewsArticles(newsItems);
                     if (!newsItems.isEmpty()) {
                         newsView.smoothScrollToPosition(0);
                     }
-                }, throwable -> clearListAndShowErrorToast());
+                }, this::clearListAndShowErrorToast);
     }
 
-    private void clearSpinnerAndShowErrorToast() {
+    private void clearSpinnerAndShowErrorToast(Throwable throwable) {
+        //throwable.printStackTrace();
         spinnerAdapter.clear();
         Toast.makeText(MainActivity.this, getString(R.string.general_error), Toast.LENGTH_SHORT).show();
     }
 
-    private void clearListAndShowErrorToast() {
+    private void clearListAndShowErrorToast(Throwable throwable) {
+        //throwable.printStackTrace();
         swipeRefreshLayout.setRefreshing(false);
-        newsAdapter.setNewsItems(new ArrayList<NewsItem>());
+        newsAdapter.setNewsArticles(new ArrayList<NewsArticle>());
         Toast.makeText(MainActivity.this, getString(R.string.general_error), Toast.LENGTH_SHORT).show();
     }
 

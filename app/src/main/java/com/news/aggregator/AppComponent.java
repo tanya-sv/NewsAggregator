@@ -1,6 +1,6 @@
 package com.news.aggregator;
 
-import com.news.aggregator.usecase.GetNewsItems;
+import com.news.aggregator.usecase.GetNewsArticles;
 import com.news.aggregator.usecase.GetNewsSources;
 import com.news.aggregator.usecase.UseCaseModule;
 import com.news.aggregator.view.MainActivity;
@@ -19,6 +19,6 @@ public interface AppComponent {
 
     GetNewsSources exposeGetNewsSources();
 
-    GetNewsItems exposeGetNewsItems();
+    GetNewsArticles exposeGetNewsArticles();
 
 }

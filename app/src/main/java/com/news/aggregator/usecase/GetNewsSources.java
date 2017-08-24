@@ -19,14 +19,12 @@ final class GetNewsSourcesImpl implements GetNewsSources {
     private NewsApi api;
 
     @Inject
-    public GetNewsSourcesImpl(NewsApi api) {
+    GetNewsSourcesImpl(NewsApi api) {
         this.api = api;
     }
 
     @Override
     public Single<List<NewsSource>> call(String category) {
-        return api.getSources("875419f0c3534b6b96a734e965e53911", category, "en")
-                .map(GetNewsSourcesResponse::getSources)
-                .toSingle();
+        return api.getSources(category, "en").map(GetNewsSourcesResponse::getSources).toSingle();
     }
 }

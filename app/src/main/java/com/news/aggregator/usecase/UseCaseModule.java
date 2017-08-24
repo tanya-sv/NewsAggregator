@@ -16,7 +16,7 @@ public class UseCaseModule {
 
     @Provides
     @Singleton
-    GetNewsItems provideGetNewsItems(GetNewsItemsImpl usecase) {
+    GetNewsArticles provideGetNewsArticles(GetNewsArticlesImpl usecase) {
         return usecase;
     }
 

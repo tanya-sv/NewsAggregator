@@ -1,5 +1,8 @@
 package com.news.aggregator.model;
 
+import java.util.Arrays;
+import java.util.List;
+
 public class NewsSource {
 
     private String id;
@@ -9,7 +12,7 @@ public class NewsSource {
     private String category;
     private String language;
     private String country;
-    private String[] sortBysAvailable;
+    private List<String> sortBysAvailable;
 
     public NewsSource(String id,
                       String name,
@@ -26,7 +29,7 @@ public class NewsSource {
         this.category = category;
         this.language = language;
         this.country = country;
-        this.sortBysAvailable = sortBysAvailable;
+        this.sortBysAvailable = Arrays.asList(sortBysAvailable);
     }
 
     public String getId() {
@@ -57,7 +60,7 @@ public class NewsSource {
         return country;
     }
 
-    public String[] getSortBysAvailable() {
+    public List<String> getSortBysAvailable() {
         return sortBysAvailable;
     }
 

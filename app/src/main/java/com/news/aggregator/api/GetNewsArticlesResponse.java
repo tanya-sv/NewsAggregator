@@ -1,18 +1,18 @@
 package com.news.aggregator.api;
 
-import com.news.aggregator.model.NewsItem;
+import com.news.aggregator.model.NewsArticle;
 
 import java.util.List;
 
 public class GetNewsArticlesResponse {
 
-    private List<NewsItem> articles;
+    private List<NewsArticle> articles;
 
-    public GetNewsArticlesResponse(List<NewsItem> articles) {
+    public GetNewsArticlesResponse(List<NewsArticle> articles) {
         this.articles = articles;
     }
 
-    public List<NewsItem> getArticles() {
+    public List<NewsArticle> getArticles() {
         return articles;
     }
 }

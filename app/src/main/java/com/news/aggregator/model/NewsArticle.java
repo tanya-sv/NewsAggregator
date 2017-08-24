@@ -2,7 +2,7 @@ package com.news.aggregator.model;
 
 import java.util.Date;
 
-public class NewsItem {
+public class NewsArticle {
 
     private String author;
     private String title;
@@ -11,7 +11,7 @@ public class NewsItem {
     private String urlToImage;
     private Date publishedAt;
 
-    public NewsItem(String author, String title, String description, String url, String urlToImage, Date publishedAt) {
+    public NewsArticle(String author, String title, String description, String url, String urlToImage, Date publishedAt) {
         this.author = author;
         this.title = title;
         this.description = description;
