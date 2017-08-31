@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import com.news.aggregator.api.NewsApi;
 import com.news.aggregator.model.NewsArticle;
 import com.news.aggregator.model.NewsSource;
+import com.news.aggregator.util.Consts;
 
 import java.util.Collections;
 import java.util.List;
@@ -28,7 +29,7 @@ final class GetNewsArticlesImpl implements GetNewsArticles {
 
     @Override
     public Single<List<NewsArticle>> call(@NonNull NewsSource source) {
-        String sortBy = "top";
+        String sortBy = Consts.DEFAULT_SORT_BY;
         if (!source.getSortBysAvailable().contains(sortBy) && source.getSortBysAvailable().size() > 0) {
             sortBy = source.getSortBysAvailable().get(0);
         }

@@ -4,41 +4,41 @@
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/nav_general"
-            android:icon="@drawable/ic_menu_camera"
+            android:icon="@drawable/ic_menu_global"
             android:title="@string/category_general" />
         <item
             android:id="@+id/nav_business"
-            android:icon="@drawable/ic_menu_camera"
+            android:icon="@drawable/ic_menu_business"
             android:title="@string/category_business" />
         <item
             android:id="@+id/nav_entertainment"
-            android:icon="@drawable/ic_menu_gallery"
+            android:icon="@drawable/ic_menu_entertainment"
             android:title="@string/category_entertainment" />
         <item
             android:id="@+id/nav_technology"
-            android:icon="@drawable/ic_menu_slideshow"
+            android:icon="@drawable/ic_menu_technology"
             android:title="@string/category_technology" />
         <item
             android:id="@+id/nav_science_nature"
-            android:icon="@drawable/ic_menu_manage"
+            android:icon="@drawable/ic_menu_science"
             android:title="@string/category_science_and_nature" />
         <item
             android:id="@+id/nav_music"
-            android:icon="@drawable/ic_menu_manage"
+            android:icon="@drawable/ic_menu_music"
             android:title="@string/category_music" />
         <item
             android:id="@+id/nav_sports"
-            android:icon="@drawable/ic_menu_manage"
+            android:icon="@drawable/ic_menu_sports"
             android:title="@string/category_sports" />
         <item
             android:id="@+id/nav_gaming"
-            android:icon="@drawable/ic_menu_manage"
+            android:icon="@drawable/ic_menu_gaming"
             android:title="@string/category_gaming" />
     </group>
     <group android:id="@+id/about">
         <item
             android:id="@+id/nav_about"
-            android:icon="@drawable/ic_menu_share"
+            android:icon="@drawable/ic_menu_about"
             android:title="@string/category_about" />
     </group>
 

@@ -3,6 +3,7 @@ package com.news.aggregator.usecase;
 import com.news.aggregator.api.GetNewsSourcesResponse;
 import com.news.aggregator.api.NewsApi;
 import com.news.aggregator.model.NewsSource;
+import com.news.aggregator.util.Consts;
 
 import java.util.List;
 
@@ -25,6 +26,6 @@ final class GetNewsSourcesImpl implements GetNewsSources {
 
     @Override
     public Single<List<NewsSource>> call(String category) {
-        return api.getSources(category, "en").map(GetNewsSourcesResponse::getSources).toSingle();
+        return api.getSources(category, Consts.DEFAULT_LANGUAGE).map(GetNewsSourcesResponse::getSources).toSingle();
     }
 }

@@ -10,4 +10,7 @@ public final class Consts {
     public static final String SPORT = "sport";
     public static final String GAMING = "gaming";
     public static final String GENERAL = "general";
+
+    public static final String DEFAULT_LANGUAGE = "en";
+    public static final String DEFAULT_SORT_BY = "top";
 }
