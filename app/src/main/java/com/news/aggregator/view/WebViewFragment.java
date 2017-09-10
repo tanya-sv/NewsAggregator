@@ -70,7 +70,9 @@ public class WebViewFragment extends Fragment {
         webView.setWebViewClient(new WebViewClient() {
             @Override
             public void onPageFinished(WebView view, String url) {
-                progressWheel.setVisibility(View.GONE);
+                if (progressWheel != null) {
+                    progressWheel.setVisibility(View.GONE);
+                }
             }
         });
         webView.loadUrl(url);

@@ -3,7 +3,6 @@ package com.news.aggregator.view;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
-import android.support.v4.BuildConfig;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -218,7 +217,10 @@ public class MainActivity extends AppCompatActivity
                     } else {
                         spinner.setSelection(0);
                     }
-                }, this::clearSpinnerAndShowErrorToast);
+                }, throwable -> {
+                    spinnerAdapter.clear();
+                    showToast(R.string.general_error);
+                });
     }
 
     private void loadNews(@NonNull NewsSource newsSource) {
@@ -231,20 +233,15 @@ public class MainActivity extends AppCompatActivity
                     if (!newsItems.isEmpty()) {
                         newsView.smoothScrollToPosition(0);
                     }
-                }, this::clearListAndShowErrorToast);
+                }, throwable -> {
+                    swipeRefreshLayout.setRefreshing(false);
+                    newsAdapter.setNewsArticles(new ArrayList<>());
+                    showToast(R.string.general_error);
+                });
     }
 
-    private void clearSpinnerAndShowErrorToast(Throwable throwable) {
-        //throwable.printStackTrace();
-        spinnerAdapter.clear();
-        Toast.makeText(MainActivity.this, getString(R.string.general_error), Toast.LENGTH_SHORT).show();
-    }
 
-    private void clearListAndShowErrorToast(Throwable throwable) {
-        //throwable.printStackTrace();
-        swipeRefreshLayout.setRefreshing(false);
-        newsAdapter.setNewsArticles(new ArrayList<NewsArticle>());
-        Toast.makeText(MainActivity.this, getString(R.string.general_error), Toast.LENGTH_SHORT).show();
+    private void showToast(int textResId) {
+        Toast.makeText(MainActivity.this, getString(textResId), Toast.LENGTH_SHORT).show();
     }
-
 }
