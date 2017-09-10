@@ -7,8 +7,11 @@
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="com.news.aggregator.view.MainActivity">
 
+    <include layout="@layout/news_toolbar"/>
+
     <Spinner
         android:id="@+id/news_sources"
+        android:layout_below="@+id/toolbar_container"
         android:layout_width="match_parent"
         android:layout_height="50dp"/>
 

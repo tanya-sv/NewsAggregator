@@ -34,13 +34,17 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.Unbinder;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
         AdapterView.OnItemSelectedListener,
+        View.OnClickListener,
         SwipeRefreshLayout.OnRefreshListener {
+
+    private Unbinder unbinder;
 
     @BindView(R.id.toolbar)
     Toolbar toolbar;
@@ -67,11 +71,11 @@ public class MainActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        ButterKnife.bind(this);
+        unbinder = ButterKnife.bind(this);
 
         ((NewsApp) getApplication()).getAppComponent().inject(this);
 
-        toolbar.setTitle(getString(R.string.category_general));
+        toolbar.setVisibility(View.VISIBLE);
         setSupportActionBar(toolbar);
 
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -90,9 +94,17 @@ public class MainActivity extends AppCompatActivity
         swipeRefreshLayout.setOnRefreshListener(this);
 
         newsView.setLayoutManager(new LinearLayoutManager(this));
-        newsAdapter = new NewsRecyclerAdapter(this);
+        newsAdapter = new NewsRecyclerAdapter(this, this);
         newsView.setAdapter(newsAdapter);
+    }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        //TODO handle screen orientation correctly
+
+        toolbar.setTitle(getString(R.string.category_general));
         loadSources(Consts.GENERAL);
     }
 
@@ -151,6 +163,9 @@ public class MainActivity extends AppCompatActivity
         }
         loadSources(category);
 
+        if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
+            getSupportFragmentManager().popBackStack();
+        }
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
@@ -169,6 +184,27 @@ public class MainActivity extends AppCompatActivity
         loadNews((NewsSource) spinner.getSelectedItem());
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unbinder.unbind();
+    }
+
+    @Override
+    public void onClick(View view) {
+        if (view.getTag() instanceof NewsArticle) {
+            String source = ((NewsSource)spinner.getSelectedItem()).getName();
+            String url = ((NewsArticle) view.getTag()).getUrl();
+            WebViewFragment fragment = WebViewFragment.getInstance(source, url);
+
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.webview_container, fragment)
+                    .addToBackStack("ArticleDetails")
+                    .commit();
+        }
+    }
+
     private void loadSources(String category) {
         getNewsSources.call(category)
                 .subscribeOn(Schedulers.io())
@@ -178,14 +214,14 @@ public class MainActivity extends AppCompatActivity
                     spinnerAdapter.addAll(newsSources);
                     if (spinner.getSelectedItemPosition() == 0) {
                         //in this case listener won't get triggered
-                        loadNews((NewsSource)spinner.getSelectedItem());
+                        loadNews((NewsSource) spinner.getSelectedItem());
                     } else {
                         spinner.setSelection(0);
                     }
                 }, this::clearSpinnerAndShowErrorToast);
     }
 
-    private void loadNews(@NonNull  NewsSource newsSource) {
+    private void loadNews(@NonNull NewsSource newsSource) {
         getNewsArticles.call(newsSource)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())

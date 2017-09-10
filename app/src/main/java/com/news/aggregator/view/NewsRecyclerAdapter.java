@@ -1,9 +1,8 @@
 package com.news.aggregator.view;
 
-import android.content.Context;
-import android.content.Intent;
 import android.net.Uri;
 import android.support.annotation.NonNull;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -23,18 +22,20 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-class NewsRecyclerAdapter extends RecyclerView.Adapter<NewsRecyclerAdapter.PostViewHolder> implements View.OnClickListener {
+class NewsRecyclerAdapter extends RecyclerView.Adapter<NewsRecyclerAdapter.PostViewHolder> {
 
     private SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd MMM yyyy HH:mm");
     private List<NewsArticle> newsArticles = new ArrayList<>();
-    private Context context;
+    private FragmentActivity activity;
+    private View.OnClickListener onClickListener;
     private int imageHeight;
     private int imageWidth;
 
-    NewsRecyclerAdapter(Context context) {
-        this.context = context;
-        this.imageHeight = context.getResources().getDimensionPixelSize(R.dimen.image_height);
-        this.imageWidth = context.getResources().getDimensionPixelSize(R.dimen.image_width);
+    NewsRecyclerAdapter(@NonNull  FragmentActivity activity, @NonNull View.OnClickListener onClickListener) {
+        this.activity = activity;
+        this.onClickListener = onClickListener;
+        this.imageHeight = activity.getResources().getDimensionPixelSize(R.dimen.image_height);
+        this.imageWidth = activity.getResources().getDimensionPixelSize(R.dimen.image_width);
     }
 
     void setNewsArticles(@NonNull List<NewsArticle> newsArticles) {
@@ -44,7 +45,7 @@ class NewsRecyclerAdapter extends RecyclerView.Adapter<NewsRecyclerAdapter.PostV
 
     @Override
     public PostViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.news_item_layout, parent, false);
+        View view = LayoutInflater.from(activity).inflate(R.layout.news_item_layout, parent, false);
         return new PostViewHolder(view);
     }
 
@@ -52,12 +53,12 @@ class NewsRecyclerAdapter extends RecyclerView.Adapter<NewsRecyclerAdapter.PostV
     public void onBindViewHolder(PostViewHolder holder, int position) {
         NewsArticle newsArticle = newsArticles.get(position);
         holder.itemView.setTag(newsArticle);
-        holder.itemView.setOnClickListener(this);
+        holder.itemView.setOnClickListener(onClickListener);
 
         if (TextUtils.isEmpty(newsArticle.getAuthor())) {
             holder.author.setVisibility(View.GONE);
         } else {
-            holder.author.setText( String.format(context.getString(R.string.author), newsArticle.getAuthor()));
+            holder.author.setText( String.format(activity.getString(R.string.author), newsArticle.getAuthor()));
             holder.author.setVisibility(View.VISIBLE);
         }
 
@@ -72,7 +73,7 @@ class NewsRecyclerAdapter extends RecyclerView.Adapter<NewsRecyclerAdapter.PostV
         if (TextUtils.isEmpty(newsArticle.getUrlToImage())) {
             holder.image.setImageResource(R.drawable.placeholder);
         } else {
-            Picasso.with(context)
+            Picasso.with(activity)
                     .load(Uri.parse(newsArticle.getUrlToImage()))
                     .resize(imageWidth, imageHeight)
                     .error(R.drawable.placeholder)
@@ -83,15 +84,6 @@ class NewsRecyclerAdapter extends RecyclerView.Adapter<NewsRecyclerAdapter.PostV
     @Override
     public int getItemCount() {
         return newsArticles.size();
-    }
-
-    @Override
-    public void onClick(View view) {
-        if (view.getTag() instanceof NewsArticle) {
-            String url = ((NewsArticle) view.getTag()).getUrl();
-            Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-            context.startActivity(browserIntent);
-        }
     }
 
     static class PostViewHolder extends RecyclerView.ViewHolder {
